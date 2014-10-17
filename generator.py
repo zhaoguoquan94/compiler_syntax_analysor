@@ -1,4 +1,4 @@
-s="""
+s = """
 program->
       external_declaration
      | program external_declaration
@@ -305,11 +305,11 @@ labeled_statement->
       IDENTIFIER ':' statement
      | CASE constant_expression ':' statement
      | DEFAULT ':' statement"""
-ss=s.split("\n \n")
-file=open("out",'w+')
+ss = s.split("\n \n")
+file = open("out", 'w+')
 for l in ss:
-    sss=l.split("->")
-    file.write(sss[0].strip()+" = [")
+    sss = l.split("->")
+    file.write(sss[0].strip() + " = [")
     for ll in sss[1].split("|"):
-        file.write('"'+ll.strip()+'",')
+        file.write('"' + ll.strip() + '",')
     file.write("]\n")
