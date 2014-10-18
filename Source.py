@@ -150,8 +150,8 @@ c_dict={"program" : ["external_declaration","program external_declaration",],
 
 }
 
-
-
+CONTROLLER=8080
+TERMINALS=[]
 
 
 # program = ["""external_declaration""","""program external_declaration""",]
