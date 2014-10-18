@@ -58,7 +58,7 @@ def derive(key, num_to_choose):
         return derive_controller(derive_sentence)
     else:
         # 适用于推出了终结符的情况
-        if derive_sentence in TERMINALS:
+        if derive_sentence in get_terminals():
             index+=1
             return  True
 

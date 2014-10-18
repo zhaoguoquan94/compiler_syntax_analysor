@@ -1,3 +1,5 @@
+import re
+
 program = ["external_declaration", "program external_declaration", ]
 external_declaration = ["function_definition", "declaration", ]
 function_definition = ["type_specifier declarator compound_statement", ]
@@ -221,3 +223,20 @@ TERMINALS=[]
 # labeled_statement = ["""IDENTIFIER ':' statement""","""CASE constant_expression ':' statement""","""DEFAULT ':' statement""",]
 
 
+def get_terminals():
+    terminals=set()
+    for item_key in c_dict.keys():
+        for items in c_dict[item_key]:
+            for item in re.split(r'\s+',items):
+                if item in c_dict.keys():
+                    continue
+                terminals.add(item)
+
+
+    return terminals
+
+def main():
+    for item in get_terminals():
+        print(item)
+if __name__=="__main__":
+    main()
