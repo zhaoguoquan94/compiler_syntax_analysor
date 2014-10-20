@@ -27,7 +27,8 @@ selection_statement = ["IF '(' expression ')' statement", "IF '(' expression ')'
 iteration_statement = ["WHILE '(' expression ')' statement",
                        "FOR '(' expression_statement expression_statement ')' statement",
                        "FOR '(' expression_statement expression_statement expression ')' statement", ]
-jump_statement = ["", "CONTINUE ';'", "BREAK ';'", "RETURN ';'", "RETURN expression ';'", ]
+# TODO wtf??在遇到可以为空的情况下无解决办法
+jump_statement = [ "CONTINUE ';'", "BREAK ';'", "RETURN ';'", "RETURN expression ';'","", ]
 expression = ["assignment_expression", "expression ',' assignment_expression", ]
 assignment_expression = ["conditional_expression", "unary_expression assignment_operator assignment_expression", ]
 conditional_expression = ["logical_or_expression", "logical_or_expression '?' expression ':' conditional_expression", ]
@@ -105,11 +106,11 @@ c_dict={"program" : ["external_declaration","program external_declaration",],
 "Initializer" : ["assignment_expression","'{' initializer_list '}'","'{' initializer_list ',' '}'",],
 "initializer_list" : ["initializer","initializer_list ',' initializer",],
 "statement_list" : ["statement","statement_list statement",],
-"Statement" : ["","compound_statement","expression_statement","selection_statement","iteration_statement","jump_statement",],
+"Statement" : ["compound_statement","expression_statement","selection_statement","iteration_statement","jump_statement","",],
 "expression_statement" : ["';'","expression ';'",],
 "selection_statement" : ["IF '(' expression ')' statement","IF '(' expression ')' statement ELSE statement",],
 "iteration_statement" : ["WHILE '(' expression ')' statement","FOR '(' expression_statement expression_statement ')' statement","FOR '(' expression_statement expression_statement expression ')' statement",],
-"jump_statement" : ["","CONTINUE ';'","BREAK ';'","RETURN ';'","RETURN expression ';'",],
+"jump_statement" : ["CONTINUE ';'","BREAK ';'","RETURN ';'","RETURN expression ';'","",],
 "expression" : ["assignment_expression","expression ',' assignment_expression",],
 "assignment_expression" : ["conditional_expression","unary_expression assignment_operator assignment_expression",],
 "conditional_expression" : ["logical_or_expression","logical_or_expression '?' expression ':' conditional_expression",],
@@ -153,82 +154,19 @@ c_dict={"program" : ["external_declaration","program external_declaration",],
 }
 
 CONTROLLER=8080
-TERMINALS=[]
+terminals=set()
 
-
-# program = ["""external_declaration""","""program external_declaration""",]
-# external_declaration = ["""function_definition""","""declaration
-#
-# function_definition""",]
-# type_specifier = ["""VOID""","""CHAR""","""INT""","""FLOAT""",]
-# declarator = ["""pointer direct_declarator""","""direct_declarator""",]
-# Pointer = ["""'*'""","""'*' pointer""",]
-# direct_declarator = ["""IDENTIFIER""","""direct_declarator'[' ']'""","""direct_declarator '[' constant_expression ']'""","""IDENTIFIER '(' parameter_list ')'""","""IDENTIFIER '(' ')'""","""direct_declarator  ','  identifier_list""",]
-# identifier_list = ["""IDENTIFIER""","""identifier_list ',' IDENTIFIER""",]
-# constant_expression = ["""conditional_expression""",]
-# parameter_list = ["""parameter_declaration""","""parameter_list ',' parameter_declaration
-#
-# parameter_declaration""",]
-# compound_statement = ["""'{' '}'""","""'{' statement_list '}'""","""'{' declaration_list statement_list '}'""",]
-# declaration_list = ["""declaration""","""declaration_list declaration""",]
-# Declaration = ["""init_declarator""","""init_declarator_list ',' init_declarator""",]
-# init_declarator = ["""declarator""","""declarator '=' initializer""",]
-# Initializer = ["""assignment_expression""","""'{' initializer_list '}'""","""'{' initializer_list ',' '}'""",]
-# initializer_list = ["""initializer""","""initializer_list ',' initializer""",]
-# statement_list = ["""statement""","""statement_list statement""",]
-# Statement = ["""""","""compound_statement""","""expression_statement""","""selection_statement""","""iteration_statement""","""jump_statement""",]
-# expression_statement = ["""';'""","""expression ';'""",]
-# selection_statement = ["""IF '(' expression ')' statement""","""IF '(' expression ')' statement ELSE statement""",]
-# iteration_statement = ["""WHILE '(' expression ')' statement""","""FOR '(' expression_statement expression_statement ')' statement""","""FOR '(' expression_statement expression_statement expression ')' statement""",]
-# jump_statement = ["""""","""CONTINUE ';'""","""BREAK ';'""","""RETURN ';'""","""RETURN expression ';'""",]
-# expression = ["""assignment_expression""","""expression ',' assignment_expression""",]
-# assignment_expression = ["""conditional_expression""","""unary_expression assignment_operator assignment_expression""",]
-# conditional_expression = ["""logical_or_expression""","""logical_or_expression '?' expression ':' conditional_expression""",]
-# logical_or_expression = ["""logical_and_expression""","""logical_or_expression OR_OP logical_and_expression""",]
-# logical_and_expression = ["""inclusive_or_expression""","""logical_and_expression AND_OP inclusive_or_expression""",]
-# inclusive_or_expression = ["""exclusive_or_expression""","""inclusive_or_expression '""","""' exclusive_or_expression""",]
-# exclusive_or_expression = ["""and_expression""","""exclusive_or_expression '^' and_expression""",]
-# and_expression = ["""equality_expression""","""and_expression '&' equality_expression""",]
-# equality_expression = ["""relational_expression""","""equality_expression EQ_OP relational_expression""","""equality_expression NE_OP relational_expression""",]
-# relational_expression = ["""shift_expression""","""relational_expression '<' shift_expression""","""relational_expression '>' shift_expression""","""relational_expression LE_OP shift_expression""","""relational_expression GE_OP shift_expression""",]
-# shift_expression = ["""additive_expression""","""shift_expression LEFT_OP additive_expression""","""shift_expression RIGHT_OP additive_expression""",]
-# additive_expression = ["""multiplicative_expression""","""additive_expression '+' multiplicative_expression""","""additive_expression '-' multiplicative_expression""",]
-# multiplicative_expression = ["""cast_expression""","""multiplicative_expression '*' cast_expression""","""multiplicative_expression '/' cast_expression""","""multiplicative_expression '%' cast_expression""",]
-# cast_expression = ["""unary_expression""","""'(' type_name ')' cast_expression""",]
-# unary_expression = ["""postfix_expression""","""INC_OP unary_expression""","""DEC_OP unary_expression""","""unary_operator cast_expression""","""SIZEOF unary_expression""","""SIZEOF '(' type_name ')'""",]
-# postfix_expression = ["""primary_expression""","""postfix_expression '[' expression ']'""","""postfix_expression '(' ')'""","""postfix_expression '(' argument_expression_list ')'""","""postfix_expression '.' IDENTIFIER""","""postfix_expression PTR_OP IDENTIFIER""","""postfix_expression INC_OP""","""postfix_expression DEC_OP""",]
-# primary_expression = ["""IDENTIFIER""","""CONSTANT""","""STRING_LITERAL""","""'(' expression ')'""",]
-# argument_expression_list = ["""assignment_expression""","""argument_expression_list ',' assignment_expression""",]
-# unary_operator = ["""'&'""","""'*'""","""'+'""","""'-'""","""'~'""","""'!'""",]
-# assignment_operator = ["""'='""","""MUL_ASSIGN""","""DIV_ASSIGN""","""MOD_ASSIGN""","""ADD_ASSIGN""","""SUB_ASSIGN""","""LEFT_ASSIGN""","""RIGHT_ASSIGN""","""AND_ASSIGN""","""XOR_ASSIGN""","""OR_ASSIGN""",]
-# storage_class_specifier = ["""TYPEDEF""","""EXTERN""","""STATIC""","""AUTO""","""REGISTER""",]
-# struct_or_union_specifier = ["""struct_or_union IDENTIFIER '{' struct_declaration_list '}'""","""struct_or_union '{' struct_declaration_list '}'""","""struct_or_union IDENTIFIER""",]
-# struct_or_union = ["""STRUCT""","""UNION""",]
-# struct_declaration_list = ["""struct_declaration""","""struct_declaration_list struct_declaration""",]
-# struct_declaration = ["""specifier_qualifier_list struct_declarator_list ';'""",]
-# specifier_qualifier_list = ["""type_specifier specifier_qualifier_list""","""type_specifier""","""type_qualifier specifier_qualifier_list""","""type_qualifier""",]
-# struct_declarator_list = ["""struct_declarator""","""struct_declarator_list ',' struct_declarator""",]
-# struct_declarator = ["""declarator""","""':' constant_expression""","""declarator ':' constant_expression""",]
-# enum_specifier = ["""ENUM '{' enumerator_list '}'""","""ENUM IDENTIFIER '{' enumerator_list '}'""","""ENUM IDENTIFIER""",]
-# enumerator_list = ["""enumerator""","""enumerator_list ',' enumerator""",]
-# Enumerator = ["""IDENTIFIER""","""IDENTIFIER '=' constant_expression""",]
-# type_qualifier = ["""CONST""","""VOLATILE""",]
-# type_qualifier_list = ["""type_qualifier""","""type_qualifier_list type_qualifier""",]
-# parameter_type_list = ["""parameter_list""","""parameter_list ',' ELLIPSIS
-#
-# parameter_list""",]
-# type_name = ["""specifier_qualifier_list""","""specifier_qualifier_list abstract_declarator""",]
-# abstract_declarator = ["""pointer""","""direct_abstract_declarator""","""pointer direct_abstract_declarator""",]
-# direct_abstract_declarator = ["""'(' abstract_declarator ')'""","""'[' ']'""","""'[' constant_expression ']'""","""direct_abstract_declarator '[' ']'""","""direct_abstract_declarator '[' constant_expression ']'""","""'(' ')'""","""'(' parameter_type_list ')'""","""direct_abstract_declarator '(' ')'""","""direct_abstract_declarator '(' parameter_type_list ')'""",]
-# labeled_statement = ["""IDENTIFIER ':' statement""","""CASE constant_expression ':' statement""","""DEFAULT ':' statement""",]
 
 
 def get_terminals():
+    global terminals
+    if len(terminals)!=0:
+        return terminals
     terminals=set()
     for item_key in c_dict.keys():
         for items in c_dict[item_key]:
             for item in re.split(r'\s+',items):
-                if item in c_dict.keys():
+                if (item in c_dict.keys())or (item.isspace()):
                     continue
                 terminals.add(item)
 

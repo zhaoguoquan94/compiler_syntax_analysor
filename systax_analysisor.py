@@ -2,7 +2,7 @@
 from Source import *
 import logging,re
 
-logging.basicConfig(format='%(asctime)s %(filename)s[line:%(lineno)d] %(levelname)s %(message)s',
+logging.basicConfig(format='%(asctime)s %(pathname)s[line:%(lineno)d] %(levelname)s %(message)s',
                     datefmt='%a, %d %b  %H:%M:%S')
 index=0
 token_stream = ""
@@ -11,8 +11,12 @@ def main():
     #读入token序列
     #调用reader()
     # return reader('program',CONTROLLER)
-    derive_controller(1)
-    print(index)
+    t=get_terminals()
+    print(t)
+    tt=get_terminals()
+    print(tt)
+    # derive_controller(1)
+    # print(index)
 def reader(key, num_to_choose):
     """key:需要调用的产生式的名称
     num_to_choose:需要选择的产生式序号，为Source.CONTROLLER的时候作为分发器。否则调用Source.c_dict['key'][num_to_choose]产生式
