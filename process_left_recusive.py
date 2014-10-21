@@ -1,4 +1,7 @@
-#coding:utf-8
+#encoding=utf8
+import logging
+logging.basicConfig(format=' %(filename)s[line:%(lineno)d] %(levelname)s %(message)s',
+                    datefmt='%a, %d %b  %H:%M:%S',level=logging.DEBUG)
 import re
 c_dict={"program" : ["external_declaration","program external_declaration",],
 "external_declaration" : ["function_definition","declaration",],
@@ -66,24 +69,50 @@ c_dict={"program" : ["external_declaration","program external_declaration",],
 "labeled_statement" : ["IDENTIFIER ':' statement","CASE constant_expression ':' statement","DEFAULT ':' statement",]
 
 }
-def main():
+name=1000
+def diliminate_recusive(i):
     global c_dict
-    num=0
-    for key in c_dict.keys():
-        print(key+"   "+ str(is_need_change(key)))
-        if is_need_change(key):
-            num+=1
-    print(num)
-
-def is_need_change(key):
-    global c_dict
-    derive_sentence_list=c_dict[key]
-    for derive_sentence in derive_sentence_list:
-        if derive_sentence.startswith(key):
-            return True
+    global A
+    global name
+    sentence_list=c_dict[A[i]]
+    beta=[]
+    alpha=[]
+    for sentence in sentence_list:
+        if sentence.startswith(A[i]):
+            alpha.append(sentence[len(A[i]):])
         else:
-            continue
-    return False
+            beta.append(sentence)
+    if len(alpha)!=0:
+        ans=[]
+        for b in beta:
+            ans.append((b+" "+str(name)).strip())
+        c_dict[A[i]]=ans
+        ans=[]
+        for al in alpha:
+            ans.append((al+" "+str(name)).strip())
+        c_dict[str(name)]=ans
+        name+=1
 
-if __name__ == '__main__':
-	main()
+
+A=[]
+for key in c_dict.keys():
+    A.append(key)
+for i in range(0,len(A)):
+    for j in range(0,i-1):
+        k=0
+        while k<len(c_dict[A[i]]):
+            print(str(i)+" "+str(j)+" "+str(k) )
+            print(c_dict[A[i]])
+            print(A[j])
+            if c_dict[A[i]][k].startswith(A[j]):
+                gama=c_dict[A[i]][k][len(A[j]):]
+                ans=[]
+                for aj in c_dict[A[j]]:
+                    ans.append((aj+" "+gama).strip())
+                c_dict[A[i]]=ans
+            k+=1
+
+    diliminate_recusive(i)
+
+
+print(c_dict)
