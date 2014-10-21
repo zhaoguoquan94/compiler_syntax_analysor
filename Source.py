@@ -96,8 +96,8 @@ c_dict={"program" : ["external_declaration","program external_declaration",],
 "declarator" : ["pointer direct_declarator","direct_declarator",],
 "Pointer" : ["'*'","'*' pointer",],
 # "direct_declarator" : ["IDENTIFIER '(' parameter_list ')'","IDENTIFIER '(' ')'","IDENTIFIER",],
-"direct_declarator" : ["IDENTIFIER '(' parameter_list ')' direct_declarator1","IDENTIFIER '(' ')' direct_declarator1","IDENTIFIER direct_declarator1"],
-"direct_declarator1":["'[' ']' direct_declarator1","'[' constant_expression ']' direct_declarator1","','  identifier_list direct_declarator1"],
+"direct_declarator" : ["IDENTIFIER '(' ')' direct_declarator1","IDENTIFIER '(' parameter_list ')' direct_declarator1","IDENTIFIER direct_declarator1"],
+"direct_declarator1":["'[' ']' direct_declarator1","'[' constant_expression ']' direct_declarator1","','  identifier_list direct_declarator1",""],
 "identifier_list" : ["IDENTIFIER","identifier_list ',' IDENTIFIER",],
 "constant_expression" : ["conditional_expression",],
 "parameter_list" : ["parameter_declaration","parameter_list ',' parameter_declaration",],
@@ -109,13 +109,13 @@ c_dict={"program" : ["external_declaration","program external_declaration",],
 "initializer" : ["assignment_expression","'{' initializer_list '}'","'{' initializer_list ',' '}'",],
 "initializer_list" : ["initializer","initializer_list ',' initializer",],
 "statement_list" : ["statement","statement_list statement",],
-"statement" : ["compound_statement","expression_statement","selection_statement","iteration_statement","jump_statement","",],
+"statement" : ["expression_statement","selection_statement","iteration_statement","jump_statement","compound_statement",""],
 "expression_statement" : ["';'","expression ';'",],
 "selection_statement" : ["IF '(' expression ')' statement","IF '(' expression ')' statement ELSE statement",],
 "iteration_statement" : ["WHILE '(' expression ')' statement","FOR '(' expression_statement expression_statement ')' statement","FOR '(' expression_statement expression_statement expression ')' statement",],
 "jump_statement" : ["CONTINUE ';'","BREAK ';'","RETURN ';'","RETURN expression ';'","",],
 "expression" : ["assignment_expression","expression ',' assignment_expression",],
-"assignment_expression" : ["conditional_expression","unary_expression assignment_operator assignment_expression",],
+"assignment_expression" : ["unary_expression assignment_operator assignment_expression","conditional_expression",],
 "conditional_expression" : ["logical_or_expression","logical_or_expression '?' expression ':' conditional_expression",],
 "logical_or_expression" : ["logical_and_expression","logical_or_expression OR_OP logical_and_expression",],
 "logical_and_expression" : ["inclusive_or_expression","logical_and_expression AND_OP inclusive_or_expression",],
@@ -173,7 +173,7 @@ def get_terminals():
                     continue
                 terminals.add(item)
 
-
+    terminals.add("")
     return terminals
 
 def main():

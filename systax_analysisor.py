@@ -70,6 +70,10 @@ def derive(key, num_to_choose):
     else:
         # 适用于推出了终结符的情况
         if derive_sentence in get_terminals():
+            if derive_sentence=="":
+                # 适合于产生空的情况
+                logging.info("产生式选择问为空")
+                return True
             if derive_sentence==token_stream[index]:
                 index+=1
             else:
@@ -86,12 +90,19 @@ def derive(key, num_to_choose):
             elif derive_sentence_list[i] in get_terminals():
                 # 推出了终结符？
                 # TODO should inc index?
-                index+=1
-                result=True
+                if derive_sentence_list[i]=="":
+                    result=True
+                else:
+                    if derive_sentence_list[i]==token_stream[index]:
+                        logging.info("匹配终结符"+token_stream[index])
+                        index+=1
+                        result=True
+                    else:
+                        result=False
             else:
                 result=False
             if result==False:
-                logging.info("this is not the path.选择了错误的产生式:"+key+"->"+derive_sentence_list[i])
+                logging.info("this is not the path.选择了错误的产生式:"+key+"->"+ str(derive_sentence_list))
                 return False
         logging.info("成功匹配产生式"+str({"key":key,"value":derive_sentence}))
         return True
