@@ -101,9 +101,6 @@ for i in range(0,len(A)):
     for j in range(0,i-1):
         k=0
         while k<len(c_dict[A[i]]):
-            print(str(i)+" "+str(j)+" "+str(k) )
-            print(c_dict[A[i]])
-            print(A[j])
             if c_dict[A[i]][k].startswith(A[j]):
                 gama=c_dict[A[i]][k][len(A[j]):]
                 ans=[]
@@ -115,4 +112,5 @@ for i in range(0,len(A)):
     diliminate_recusive(i)
 
 
-print(c_dict)
+for key in c_dict.keys():
+    print('"'+key+'":'+str(c_dict[key]))
