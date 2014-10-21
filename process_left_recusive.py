@@ -113,4 +113,4 @@ for i in range(0,len(A)):
 
 
 for key in c_dict.keys():
-    print('"'+key+'":'+str(c_dict[key]))
+    print('"'+key+'":'+str(c_dict[key])+",")

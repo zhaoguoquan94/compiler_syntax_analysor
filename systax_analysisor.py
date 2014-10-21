@@ -33,14 +33,15 @@ def reader(key, num_to_choose):
 
 
 def derive_controller(key):
-    logging.info("derive_controller called with key:------"+key+"--------")
     global index
+    logging.info("derive_controller called with key:------"+key+"--------at index:"+str(index)+" token:"+str(token_stream[index]))
     if (c_dict.get(key) is None):
         logging.error("error when parsing!No such key in dictionary.产生式出现了不可解决的异常")
         error_process(key,"产生式出现了不可解决的异常")
         return False
     else:
         derived_result = c_dict[key]
+        logging.info("derive_controller::::::"+key+"->"+str(derived_result))
         index_save=index
         for i in range(0,len(derived_result)):
             index=index_save
