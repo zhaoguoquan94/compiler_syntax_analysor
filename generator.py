@@ -709,10 +709,10 @@ ss = s.split(";\n\n")
 file = open("out", 'w+')
 for l in ss:
     sss = l.split(":")
-    file.write(sss[0].strip() + " = [")
+    file.write('"'+sss[0].strip() + "\" : [")
     for ll in sss[1].split("|"):
         if ll=="\"":
             pass
         file.write('"' + ll.strip().strip('"').replace("\n","") + '",')
-    file.write("]\n")
+    file.write("],\n")
 file.close()
