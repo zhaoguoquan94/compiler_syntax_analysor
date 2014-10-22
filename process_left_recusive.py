@@ -135,10 +135,10 @@ c_dict={
 "function_definition" : ["declaration_specifiers declarator declaration_list compound_statement","declaration_specifiers declarator compound_statement","declarator declaration_list compound_statement","declarator compound_statement	;",],
 
 }
-c_dict={
-    "A1":["A1 a1","A1 a2","b1","b2",],
-    "b1":["A1 a3"]
-}
+# c_dict={
+#     "A1":["A1 a1","A1 a2","b1","b2",],
+#     "b1":["A1 a3"]
+# }
 name=1000
 # tested，pass
 def diliminate_recusive(i):
@@ -185,9 +185,9 @@ for i in range(0,len(A)):
                 for a in ans:
                     c_dict[A[i]].insert(k,a)
             k+=1
-    print("cdict before diliminate recursive "+str(c_dict))
+    # print("cdict before diliminate recursive "+str(c_dict))
     diliminate_recusive(i)
-    print("cdict after diliminate recursive "+str(c_dict))
+    # print("cdict after diliminate recursive "+str(c_dict))
 
 
 for key in c_dict.keys():

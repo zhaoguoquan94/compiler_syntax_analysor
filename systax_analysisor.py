@@ -6,7 +6,7 @@ import logging,re
 logging.basicConfig(format=' %(filename)s[line:%(lineno)d] %(levelname)s %(message)s',
                     datefmt='%a, %d %b  %H:%M:%S',level=logging.DEBUG)
 index=0
-token_stream="""EXTERN CHAR IDENTIFIER ';' EXTERN INT IDENTIFIER ';' IDENTIFIER '(' IDENTIFIER ')' ';' CHAR '*' IDENTIFIER ';' INT IDENTIFIER '(' ')' '{' RETURN CONSTANT ';' '}' INT IDENTIFIER '(' ')' '{' INT IDENTIFIER '=' CONSTANT ';' IDENTIFIER '=' IDENTIFIER '(' ')' ';' RETURN IDENTIFIER ';' '}' """.split(" ")
+token_stream="""INT IDENTIFIER '(' ')' '{' '*' IDENTIFIER ';' '}' """.split(" ")
 error = []
 def main():
     #读入token序列
@@ -51,7 +51,7 @@ def derive_controller(key):
                 return result
             else:
                 continue
-        logging.error("没有在便利所有产生式后找到合适的产生式")
+        logging.error("没有在便利所有产生式后找到合适的产生式:key:"+key+"\t derive_result:"+str(derived_result))
         return False
 
 
@@ -103,7 +103,7 @@ def derive(key, num_to_choose):
             else:
                 result=False
             if result==False:
-                logging.info("this is not the path.选择了错误的产生式:"+key+"->"+ str(derive_sentence_list))
+                # logging.info("this is not the path.选择了错误的产生式:"+key+"->"+ str(derive_sentence_list))
                 return False
         logging.info("成功匹配产生式"+str({"key":key,"value":derive_sentence}))
         return True
