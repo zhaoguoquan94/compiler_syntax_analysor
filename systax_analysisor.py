@@ -1,16 +1,19 @@
 # encoding=utf8
 
 from Source import *
-import logging,re
+import logging,re,mylex
 
 logging.basicConfig(format=' %(filename)s[line:%(lineno)d] %(levelname)s %(message)s',
                     datefmt='%a, %d %b  %H:%M:%S',level=logging.DEBUG)
 index=0
-token_stream="""INT IDENTIFIER '(' ')' '{' '*' IDENTIFIER ';' '}' """.split(" ")
+# token_stream="""INT IDENTIFIER '(' ')' '{' IDENTIFIER ';' IDENTIFIER '=' CONSTANT ';' WHILE '(' SIZEOF '(' INT ')' ')' '{' IDENTIFIER '=' CONSTANT ';' '}' RETURN CONSTANT ';' '}''""".split(" ")
+token_stream="""INT IDENTIFIER '(' ')' '{' IDENTIFIER ';' IDENTIFIER ';' IDENTIFIER ';' IDENTIFIER ';' IDENTIFIER '=' CONSTANT ';' '}' """.split(" ")
+# INT IDENTIFIER '(' ')' '{' IDENTIFIER ';' IDENTIFIER ';' IDENTIFIER ';' '}'
 error = []
 def main():
     #读入token序列
-
+    s=mylex.get_s()
+    print(s)
     print(token_stream)
     #调用reader()
     print(reader('translation_unit',CONTROLLER))
@@ -34,24 +37,25 @@ def reader(key, num_to_choose):
 
 def derive_controller(key):
     global index
-    logging.info("derive_controller called with key:------"+key+"--------at index:"+str(index)+" token:"+str(token_stream[index]))
+    # logging.info("derive_controller called with key:------"+key+"--------at index:"+str(index)+" token:"+str(token_stream[index]))
     if (c_dict.get(key) is None):
         logging.error("error when parsing!No such key in dictionary.产生式出现了不可解决的异常")
         error_process(key,"产生式出现了不可解决的异常")
         return False
     else:
         derived_result = c_dict[key]
-        logging.info("derive_controller::::::"+key+"->"+str(derived_result))
+        # logging.info("derive_controller::::::"+key+"->"+str(derived_result))
         index_save=index
         for i in range(0,len(derived_result)):
             index=index_save
             result=derive(key,i)
             if(result ==True):
-                logging.info("匹配成功\t"+"<"+key+"> -> "+derived_result[i])
+                if derived_result[i]!="":
+                    logging.info("匹配成功\t"+"<"+key+"> -> "+derived_result[i])
                 return result
             else:
                 continue
-        logging.error("没有在便利所有产生式后找到合适的产生式:key:"+key+"\t derive_result:"+str(derived_result))
+        # logging.error("没有在便利所有产生式后找到合适的产生式:key:"+key+"\t derive_result:"+str(derived_result))
         return False
 
 
@@ -63,7 +67,7 @@ def derive(key, num_to_choose):
         logging.error("fatal error!产生式种类不全！")
         error_process(key,"fatal error!产生式种类不全！")
     derive_sentence=derive_list[num_to_choose]
-    logging.info("derive called with options: deriving :--------"+derive_sentence+"------------")
+    # logging.info("derive called with options: deriving :--------"+derive_sentence+"------------")
 
     # 适用于推出了非终结符的情况
     if derive_sentence in c_dict.keys():
@@ -73,13 +77,13 @@ def derive(key, num_to_choose):
         if derive_sentence in get_terminals():
             if derive_sentence=="":
                 # 适合于产生空的情况
-                logging.info("产生式选择问为空")
+                # logging.info("产生式选择问为空")
                 return True
             if derive_sentence==token_stream[index]:
                 index+=1
             else:
                 return False
-            logging.info("推出了一个终结符"+derive_sentence)
+            logging.info(key+"推出了一个终结符"+derive_sentence)
             return  True
 
 
@@ -95,7 +99,7 @@ def derive(key, num_to_choose):
                     result=True
                 else:
                     if derive_sentence_list[i]==token_stream[index]:
-                        logging.info("匹配终结符"+token_stream[index])
+                        # logging.info("匹配终结符"+token_stream[index])
                         index+=1
                         result=True
                     else:
@@ -105,7 +109,7 @@ def derive(key, num_to_choose):
             if result==False:
                 # logging.info("this is not the path.选择了错误的产生式:"+key+"->"+ str(derive_sentence_list))
                 return False
-        logging.info("成功匹配产生式"+str({"key":key,"value":derive_sentence}))
+        # logging.info("成功匹配产生式"+str({"key":key,"value":derive_sentence}))
         return True
 
 
