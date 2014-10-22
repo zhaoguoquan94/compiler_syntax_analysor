@@ -1,4 +1,4 @@
-
+{'A1': ['b1 1000', 'b2 1000'], '1000': ['a1 1000', 'a2 1000', ''], 'b1': ['b2 1000 a3', 'b1 1000 a3']}
 program->
       external_declaration
      | program external_declaration
@@ -361,6 +361,7 @@ Jutta Degener, 1995
 %token STRUCT UNION ENUM ELLIPSIS
 
 %token CASE DEFAULT IF ELSE SWITCH WHILE DO FOR GOTO CONTINUE BREAK RETURN
+"IDENTIFIER","CONSTANT","STRING_LITERAL","SIZEOF","PTR_OP","INC_OP","DEC_OP","LEFT_OP","RIGHT_OP","LE_OP","GE_OP","EQ_OP","NE_OP","AND_OP","OR_OP","MUL_ASSIGN","DIV_ASSIGN","MOD_ASSIGN","ADD_ASSIGN","SUB_ASSIGN","LEFT_ASSIGN","RIGHT_ASSIGN","AND_ASSIGN","XOR_ASSIGN","OR_ASSIGN","TYPE_NAME","TYPEDEF","EXTERN","STATIC","AUTO","REGISTER","CHAR","SHORT","INT","LONG","SIGNED","UNSIGNED","FLOAT","DOUBLE","CONST","VOLATILE","VOID","STRUCT","UNION","ENUM","ELLIPSIS","CASE","DEFAULT","IF","ELSE","SWITCH","WHILE","DO","FOR","GOTO","CONTINUE","BREAK","RETURN"
 
 %start translation_unit
 %%
@@ -778,3 +779,140 @@ char *s;
 	fflush(stdout);
 	printf("\n%*s\n%*s\n", column, "^", column, s);
 }
+
+
+
+EXTERN CHAR IDENTIFIER ';' EXTERN INT IDENTIFIER ';' IDENTIFIER '(' IDENTIFIER ')' ';' CHAR '*' IDENTIFIER ';' INT IDENTIFIER '(' ')' '{' RETURN CONSTANT ';' '}' INT IDENTIFIER '(' ')' '{' INT IDENTIFIER '=' CONSTANT ';' IDENTIFIER '=' IDENTIFIER '(' ')' ';' RETURN IDENTIFIER ';' '}'
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#encoding=utf8
+import logging
+logging.basicConfig(format=' %(filename)s[line:%(lineno)d] %(levelname)s %(message)s',
+                    datefmt='%a, %d %b  %H:%M:%S',level=logging.DEBUG)
+import re
+c_dict={"program" : ["external_declaration","program external_declaration",],
+"external_declaration" : ["function_definition","declaration",],
+"function_definition" : ["type_specifier declarator compound_statement",],
+"type_specifier" : ["VOID","CHAR","INT","FLOAT",],
+"declarator" : ["pointer direct_declarator","direct_declarator",],
+"Pointer" : ["'*'","'*' pointer",],
+"direct_declarator" : ["IDENTIFIER '(' parameter_list ')'","IDENTIFIER '(' ')'","IDENTIFIER",],
+"identifier_list" : ["IDENTIFIER","identifier_list ',' IDENTIFIER",],
+"constant_expression" : ["conditional_expression",],
+"parameter_list" : ["parameter_declaration","parameter_list ',' parameter_declaration",],
+"parameter_declaration" : ["declaration_specifiers  IDENTIFIER",],
+"compound_statement" : ["'{' '}'","'{' statement_list '}'","'{' declaration_list statement_list '}'",],
+"declaration_list" : ["declaration","declaration_list declaration",],
+"declaration" : ["init_declarator","init_declarator_list ',' init_declarator",],
+"init_declarator" : ["declarator","declarator '=' initializer",],
+"initializer" : ["assignment_expression","'{' initializer_list '}'","'{' initializer_list ',' '}'",],
+"initializer_list" : ["initializer","initializer_list ',' initializer",],
+"statement_list" : ["statement","statement_list statement",],
+"statement" : ["expression_statement","selection_statement","iteration_statement","jump_statement","compound_statement",""],
+"expression_statement" : ["';'","expression ';'",],
+"selection_statement" : ["IF '(' expression ')' statement","IF '(' expression ')' statement ELSE statement",],
+"iteration_statement" : ["WHILE '(' expression ')' statement","FOR '(' expression_statement expression_statement ')' statement","FOR '(' expression_statement expression_statement expression ')' statement",],
+"jump_statement" : ["CONTINUE ';'","BREAK ';'","RETURN ';'","RETURN expression ';'","",],
+"expression" : ["assignment_expression","expression ',' assignment_expression",],
+"assignment_expression" : ["unary_expression assignment_operator assignment_expression","conditional_expression",],
+"conditional_expression" : ["logical_or_expression","logical_or_expression '?' expression ':' conditional_expression",],
+"logical_or_expression" : ["logical_and_expression","logical_or_expression OR_OP logical_and_expression",],
+"logical_and_expression" : ["inclusive_or_expression","logical_and_expression AND_OP inclusive_or_expression",],
+"inclusive_or_expression" : ["exclusive_or_expression","inclusive_or_expression '","' exclusive_or_expression",],
+"exclusive_or_expression" : ["and_expression","exclusive_or_expression '^' and_expression",],
+"and_expression" : ["equality_expression","and_expression '&' equality_expression",],
+"equality_expression" : ["relational_expression","equality_expression EQ_OP relational_expression","equality_expression NE_OP relational_expression",],
+"relational_expression" : ["shift_expression","relational_expression '<' shift_expression","relational_expression '>' shift_expression","relational_expression LE_OP shift_expression","relational_expression GE_OP shift_expression",],
+"shift_expression" : ["additive_expression","shift_expression LEFT_OP additive_expression","shift_expression RIGHT_OP additive_expression",],
+"additive_expression" : ["multiplicative_expression","additive_expression '+' multiplicative_expression","additive_expression '-' multiplicative_expression",],
+"multiplicative_expression" : ["cast_expression","multiplicative_expression '*' cast_expression","multiplicative_expression '/' cast_expression","multiplicative_expression '%' cast_expression",],
+"cast_expression" : ["unary_expression","'(' type_name ')' cast_expression",],
+"unary_expression" : ["postfix_expression","INC_OP unary_expression","DEC_OP unary_expression","unary_operator cast_expression","SIZEOF unary_expression","SIZEOF '(' type_name ')'",],
+"postfix_expression" : ["primary_expression","postfix_expression '[' expression ']'","postfix_expression '(' ')'","postfix_expression '(' argument_expression_list ')'","postfix_expression '.' IDENTIFIER","postfix_expression PTR_OP IDENTIFIER","postfix_expression INC_OP","postfix_expression DEC_OP",],
+"primary_expression" : ["IDENTIFIER","CONSTANT","STRING_LITERAL","'(' expression ')'",],
+"argument_expression_list" : ["assignment_expression","argument_expression_list ',' assignment_expression",],
+"unary_operator" : ["'&'","'*'","'+'","'-'","'~'","'!'",],
+"assignment_operator" : ["'='","MUL_ASSIGN","DIV_ASSIGN","MOD_ASSIGN","ADD_ASSIGN","SUB_ASSIGN","LEFT_ASSIGN","RIGHT_ASSIGN","AND_ASSIGN","XOR_ASSIGN","OR_ASSIGN",],
+"storage_class_specifier" : ["TYPEDEF","EXTERN","STATIC","AUTO","REGISTER",],
+"struct_or_union_specifier" : ["struct_or_union IDENTIFIER '{' struct_declaration_list '}'","struct_or_union '{' struct_declaration_list '}'","struct_or_union IDENTIFIER",],
+"struct_or_union" : ["STRUCT","UNION",],
+"struct_declaration_list" : ["struct_declaration","struct_declaration_list struct_declaration",],
+"struct_declaration" : ["specifier_qualifier_list struct_declarator_list ';'",],
+"specifier_qualifier_list" : ["type_specifier specifier_qualifier_list","type_specifier","type_qualifier specifier_qualifier_list","type_qualifier",],
+"struct_declarator_list" : ["struct_declarator","struct_declarator_list ',' struct_declarator",],
+"struct_declarator" : ["declarator","':' constant_expression","declarator ':' constant_expression",],
+"enum_specifier" : ["ENUM '{' enumerator_list '}'","ENUM IDENTIFIER '{' enumerator_list '}'","ENUM IDENTIFIER",],
+"enumerator_list" : ["enumerator","enumerator_list ',' enumerator",],
+"Enumerator" : ["IDENTIFIER","IDENTIFIER '=' constant_expression",],
+"type_qualifier" : ["CONST","VOLATILE",],
+"type_qualifier_list" : ["type_qualifier","type_qualifier_list type_qualifier",],
+"parameter_type_list" : ["parameter_list","parameter_list ',' ELLIPSIS",],
+"parameter_list" : ["parameter_declaration","parameter_list ',' parameter_declaration",],
+"type_name" : ["specifier_qualifier_list","specifier_qualifier_list abstract_declarator",],
+"abstract_declarator" : ["pointer","direct_abstract_declarator","pointer direct_abstract_declarator",],
+"direct_abstract_declarator" : ["'(' abstract_declarator ')'","'[' ']'","'[' constant_expression ']'","direct_abstract_declarator '[' ']'","direct_abstract_declarator '[' constant_expression ']'","'(' ')'","'(' parameter_type_list ')'","direct_abstract_declarator '(' ')'","direct_abstract_declarator '(' parameter_type_list ')'",],
+"labeled_statement" : ["IDENTIFIER ':' statement","CASE constant_expression ':' statement","DEFAULT ':' statement",]
+
+}
+name=1000
+def diliminate_recusive(i):
+    global c_dict
+    global A
+    global name
+    sentence_list=c_dict[A[i]]
+    beta=[]
+    alpha=[]
+    for sentence in sentence_list:
+        if sentence.startswith(A[i]):
+            alpha.append(sentence[len(A[i]):])
+        else:
+            beta.append(sentence)
+    if len(alpha)!=0:
+        ans=[]
+        for b in beta:
+            ans.append((b+" "+str(name)).strip())
+        c_dict[A[i]]=ans
+        ans=[]
+        for al in alpha:
+            ans.append((al+" "+str(name)).strip())
+        c_dict[str(name)]=ans
+        name+=1
+
+
+A=[]
+for key in c_dict.keys():
+    A.append(key)
+for i in range(0,len(A)):
+    for j in range(0,i-1):
+        k=0
+        while k<len(c_dict[A[i]]):
+            print(str(i)+" "+str(j)+" "+str(k) )
+            print(c_dict[A[i]])
+            print(A[j])
+            if c_dict[A[i]][k].startswith(A[j]):
+                gama=c_dict[A[i]][k][len(A[j]):]
+                ans=[]
+                for aj in c_dict[A[j]]:
+                    ans.append((aj+" "+gama).strip())
+                c_dict[A[i]]=ans
+            k+=1
+
+    diliminate_recusive(i)
+
+
+print(c_dict)

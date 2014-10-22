@@ -6,14 +6,14 @@ import logging,re
 logging.basicConfig(format=' %(filename)s[line:%(lineno)d] %(levelname)s %(message)s',
                     datefmt='%a, %d %b  %H:%M:%S',level=logging.DEBUG)
 index=0
-token_stream="""INT IDENTIFIER '(' ')' '{' INT IDENTIFIER '=' CONSTANT ';' FLOAT IDENTIFIER '=' CONSTANT ';' INT IDENTIFIER '=' CONSTANT ';' DOUBLE IDENTIFIER '=' CONSTANT ';' FOR '(' INT IDENTIFIER '=' CONSTANT ';' IDENTIFIER '<' CONSTANT ';' IDENTIFIER INC_OP ')' '{' IDENTIFIER '+' '=' CONSTANT ';' '}' CHAR '*' IDENTIFIER '=' STRING_LITERAL INT IDENTIFIER '=' CONSTANT ';' WHILE '(' IDENTIFIER DEC_OP ')' '{' IDENTIFIER '/' '=' '(' IDENTIFIER '-' IDENTIFIER ')' '*' CONSTANT ';' IDENTIFIER INC_OP ';' IDENTIFIER DEC_OP ';' IF '(' IDENTIFIER GE_OP CONSTANT ')' '{' IF '(' IDENTIFIER LE_OP CONSTANT ')' '{' IDENTIFIER '=' CONSTANT ';' '}' '}' '}' IF '(' IDENTIFIER NE_OP IDENTIFIER ')' '{' IDENTIFIER '=' IDENTIFIER '+' IDENTIFIER '}' '}'""".split(" ")
+token_stream="""EXTERN CHAR IDENTIFIER ';' EXTERN INT IDENTIFIER ';' IDENTIFIER '(' IDENTIFIER ')' ';' CHAR '*' IDENTIFIER ';' INT IDENTIFIER '(' ')' '{' RETURN CONSTANT ';' '}' INT IDENTIFIER '(' ')' '{' INT IDENTIFIER '=' CONSTANT ';' IDENTIFIER '=' IDENTIFIER '(' ')' ';' RETURN IDENTIFIER ';' '}' """.split(" ")
 error = []
 def main():
     #读入token序列
 
     print(token_stream)
     #调用reader()
-    print(reader('program',CONTROLLER))
+    print(reader('translation_unit',CONTROLLER))
     # t=get_terminals()
     # print(t)
     # tt=get_terminals()

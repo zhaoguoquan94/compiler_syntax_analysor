@@ -135,7 +135,12 @@ c_dict={
 "function_definition" : ["declaration_specifiers declarator declaration_list compound_statement","declaration_specifiers declarator compound_statement","declarator declaration_list compound_statement","declarator compound_statement	;",],
 
 }
+c_dict={
+    "A1":["A1 a1","A1 a2","b1","b2",],
+    "b1":["A1 a3"]
+}
 name=1000
+# tested，pass
 def diliminate_recusive(i):
     global c_dict
     global A
@@ -156,6 +161,7 @@ def diliminate_recusive(i):
         ans=[]
         for al in alpha:
             ans.append((al+" "+str(name)).strip())
+        ans.append('')
         c_dict[str(name)]=ans
         name+=1
 
@@ -164,18 +170,24 @@ A=[]
 for key in c_dict.keys():
     A.append(key)
 for i in range(0,len(A)):
-    for j in range(0,i-1):
+    for j in range(0,i):
         k=0
         while k<len(c_dict[A[i]]):
             if c_dict[A[i]][k].startswith(A[j]):
-                gama=c_dict[A[i]][k][len(A[j]):]
+                if len(A[j])==c_dict[A[i]][k]:
+                    gama=""
+                else:
+                    gama=c_dict[A[i]][k][len(A[j]):].strip()
                 ans=[]
                 for aj in c_dict[A[j]]:
                     ans.append((aj+" "+gama).strip())
-                c_dict[A[i]]=ans
+                c_dict[A[i]].pop(k)
+                for a in ans:
+                    c_dict[A[i]].insert(k,a)
             k+=1
-
+    print("cdict before diliminate recursive "+str(c_dict))
     diliminate_recusive(i)
+    print("cdict after diliminate recursive "+str(c_dict))
 
 
 for key in c_dict.keys():
